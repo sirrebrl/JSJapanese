@@ -16,12 +16,8 @@ function SelectRandomHiragana()
         selector -= activeHiragana[i].weight;
         if (selector <= 0)
         {
-            let allocate = activeHiragana[i].weight / (activeHiragana.length - 1);
-            for (let j = 0; j < activeHiragana.length; j++)
-            {
-                activeHiragana[j].weight += allocate;
-            }
-            activeHiragana[i].weight = 0;
+            activeHiragana[i].weight *= 0.8;
+            NormalizeWeights();
 
             selectedHiragana = activeHiragana[i];
             return;
@@ -378,4 +374,11 @@ function BiasWeights()
     {
         activeHiragana[i].weight /= weightSum;
     }
+}
+
+function NormalizeWeights()
+{
+    let weightSum = 0;
+    for (let i = 0; i < activeHiragana[i].length; i++) { weightSum += activeHiragana[i].weight; }
+    for (let i = 0; i < activeHiragana[i].length; i++) { activeHiragana[i].weight /= weightSum; }
 }
