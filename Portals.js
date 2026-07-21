@@ -203,7 +203,7 @@ let HiraganaPortal = [
         horizontalCells: 60,
         headerText: 3,
         flashcardText: 6,
-        subcardText: 4,
+        subcardText: 2,
         answerboxText: 4,
         buttonText: 2,
         keyboardText: 2,
@@ -229,8 +229,8 @@ let HiraganaPortal = [
                 subcards: [
                     {
                         text: '',
-                        left: 19, top: 4,
-                        width: 4, height: 4
+                        left: 10, top: 9,
+                        width: 4, height: 2
                     }
                 ],
                 answerbox:
