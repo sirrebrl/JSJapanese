@@ -7,10 +7,7 @@ for (let i = 0; i < hiragana.length; i++)
         activeHiragana[activeHiragana.length-1].hiragana = hiragana[i];
     }
 }
-for (let i = 0; i < activeHiragana.length; i++)
-{
-    activeHiragana[i].weight = 1.0 / activeHiragana.length;
-}
+BiasWeights();
 
 nextCard();
 

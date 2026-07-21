@@ -254,7 +254,6 @@ function ApproveActivation()
 
     studentData.hiraganaBatch++;
 
-    let previousCount = activeHiragana.length;
     for (let i = 0; i < hiraganaBatches[studentData.hiraganaBatch].length; i++)
     {
         let thisHiragana = hiraganaBatches[studentData.hiraganaBatch][i]
@@ -262,14 +261,7 @@ function ApproveActivation()
         activeHiragana.push(studentData.hiragana[thisHiragana]);
         activeHiragana[activeHiragana.length-1].hiragana = thisHiragana;
     }
-    for (let i = 0; i < previousCount; i++)
-    {
-        activeHiragana[i].weight = activeHiragana[i].weight * previousCount / activeHiragana.length;
-    }
-    for (let i = previousCount; i < activeHiragana.length; i++)
-    {
-        activeHiragana[i].weight = 1.0 / activeHiragana.length;
-    }
+    BiasWeights();
 }
 
 function typeKey(e)
@@ -317,14 +309,14 @@ function submitAnswer()
             activeHiragana[i].progress[activeHiragana[i].progress.length-1] = Math.max(activeHiragana[i].progress[activeHiragana[i].progress.length-1], 0);
 
             let progressSum = 0;
-            let progressLength = activeHiragana[progressive].progress.length - 1;
-            for (let i = 0; i < progressLength - 1; i++)
+            let progressLength = activeHiragana[i].progress.length - 1;
+            for (let j = 0; j < progressLength - 1; j++)
             {
-                activeHiragana[progressive].progress[i] = activeHiragana[progressive].progress[i+1];
-                progressSum += activeHiragana[progressive].progress[i];
+                activeHiragana[i].progress[j] = activeHiragana[i].progress[j+1];
+                progressSum += activeHiragana[i].progress[j];
             }
-            activeHiragana[progressive].progress[progressLength-1] = progress;
-            progressSum += activeHiragana[progressive].progress[progressLength-1];
+            activeHiragana[i].progress[progressLength-1] = progress;
+            progressSum += activeHiragana[i].progress[progressLength-1];
 
             if (progressSum == -5)
             {
@@ -355,4 +347,35 @@ function clearAnswer()
     }
     portalPanel.handakuten.dataset.setting = 0;
     portalPanel.dakuten.dataset.setting = 0;
+}
+
+function BiasWeights()
+{
+    let weightSum = 0;
+
+    for (let i = 0; i < activeHiragana.length; i++)
+    {
+        activeHiragana[i].weight = 0;
+        switch (activeHiragana[i].stage)
+        {
+            case 0:
+                activeHiragana[i].weight = 10 + (activeHiragana[i].progress / 2);
+                break;
+            case 1:
+                activeHiragana[i].weight = 6 + Math.abs(activeHiragana[i].progress.reduce((accumulator, current) => accumulator + current, 0) / 2);
+                break;
+            case 2:
+                activeHiragana[i].weight = 3 + Math.abs(activeHiragana[i].progress.reduce((accumulator, current) => accumulator + current, 0) / 2);
+                break;
+            case 3:
+                activeHiragana[i].weight = Math.pow(1.2, -activeHiragana[i].progress[activeHiragana[i].progress.length-1]);
+                break;
+        }
+        weightSum += activeHiragana[i].weight;
+    }
+
+    for (let i = 0; i < activeHiragana.length; i++)
+    {
+        activeHiragana[i].weight /= weightSum;
+    }
 }
