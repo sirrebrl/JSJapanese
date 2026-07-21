@@ -118,6 +118,26 @@ let HiraganaPortal = [
                         text: '',
                         left: 10, top: 22,
                         width: 8, height: 4
+                    },
+                    {
+                        text: '',
+                        left: 26, top: 12.5,
+                        width: 6, height: 2
+                    },
+                    {
+                        text: '',
+                        left: 41, top: 12.5,
+                        width: 6, height: 2
+                    },
+                    {
+                        text: '',
+                        left: 26, top: 24.5,
+                        width: 6, height: 2
+                    },
+                    {
+                        text: '',
+                        left: 41, top: 24.5,
+                        width: 6, height: 2
                     }
                 ],
                 optioncards: [

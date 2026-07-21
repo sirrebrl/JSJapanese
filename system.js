@@ -132,10 +132,12 @@ function nextCard()
             RandomizeIncorrectHiragana();
             correct = Math.round(Math.random());
             let leftButton = (correct == 0) ? ((direction == 1) ? selectedHiragana.hiragana : selectedHiragana.romaji) : ((direction == 1) ? incorrectHiragana[0].hiragana : incorrectHiragana[0].romaji);
+                let leftSub = (correct == 0) ? selectedHiragana.ref : incorrectHiragana[0].ref;
+                if (direction == 0 && leftSub != '') leftButton += `\n(${leftSub})`;
             let rightButton = (correct == 1) ? ((direction == 1) ? selectedHiragana.hiragana : selectedHiragana.romaji) : ((direction == 1) ? incorrectHiragana[0].hiragana : incorrectHiragana[0].romaji);
+                let rightSub = (correct == 1) ? selectedHiragana.ref : incorrectHiragana[0].ref;
+                if (direction == 0 && rightSub != '') rightButton += `\n(${rightSub})`;
             HiraganaPortal[1].pages.default.optioncards[0].text = leftButton;
-            HiraganaPortal[1].pages.default.optioncards[0].text = leftButton;
-            HiraganaPortal[1].pages.default.optioncards[1].text = rightButton;
             HiraganaPortal[1].pages.default.optioncards[1].text = rightButton;
 
             destroyPortal();
@@ -148,39 +150,62 @@ function nextCard()
             HiraganaPortal[2].pages.default.flashcards[0].text = (direction == 0) ? selectedHiragana.hiragana : selectedHiragana.romaji;
             if (direction == 1 && selectedHiragana.ref != "") { HiraganaPortal[2].pages.default.subcards[0].text = `(${selectedHiragana.ref})`; }
 
+            for (let i = 1; i < 5; i++) HiraganaPortal[2].pages.default.subcards[i].text = '';
+
+            HiraganaPortal[2].pages.default.subcardText = (direction == 0) ? 0.5 : 2;
+
             RandomizeIncorrectHiragana();
             correct = Math.floor(Math.random() * 4);
             let buttons = [];
+            let subButtons = ['','','',''];
             switch (correct)
             {
                 case 0:
                     buttons[0] = (direction == 1) ? selectedHiragana.hiragana : selectedHiragana.romaji;
+                        if (direction == 0 && selectedHiragana.ref != '') subButtons[0] = selectedHiragana.ref;
                     buttons[1] = (direction == 1) ? incorrectHiragana[0].hiragana : incorrectHiragana[0].romaji;
+                        if (direction == 0 && incorrectHiragana[0].ref != '') subButtons[1] = incorrectHiragana[0].ref;
                     buttons[2] = (direction == 1) ? incorrectHiragana[1].hiragana : incorrectHiragana[1].romaji;
+                        if (direction == 0 && incorrectHiragana[1].ref != '') subButtons[2] = incorrectHiragana[1].ref;
                     buttons[3] = (direction == 1) ? incorrectHiragana[2].hiragana : incorrectHiragana[2].romaji;
+                        if (direction == 0 && incorrectHiragana[2].ref != '') subButtons[3] = incorrectHiragana[2].ref;
                     break;
                 case 1:
                     buttons[1] = (direction == 1) ? selectedHiragana.hiragana : selectedHiragana.romaji;
+                        if (direction == 0 && selectedHiragana.ref != '') subButtons[1] = selectedHiragana.ref;
                     buttons[0] = (direction == 1) ? incorrectHiragana[0].hiragana : incorrectHiragana[0].romaji;
+                        if (direction == 0 && incorrectHiragana[0].ref != '') subButtons[0] = incorrectHiragana[0].ref;
                     buttons[2] = (direction == 1) ? incorrectHiragana[1].hiragana : incorrectHiragana[1].romaji;
+                        if (direction == 0 && incorrectHiragana[1].ref != '') subButtons[2] = incorrectHiragana[1].ref;
                     buttons[3] = (direction == 1) ? incorrectHiragana[2].hiragana : incorrectHiragana[2].romaji;
+                        if (direction == 0 && incorrectHiragana[2].ref != '') subButtons[3] = incorrectHiragana[2].ref;
                     break;
                 case 2:
                     buttons[2] = (direction == 1) ? selectedHiragana.hiragana : selectedHiragana.romaji;
+                        if (direction == 0 && selectedHiragana.ref != '') subButtons[2] = selectedHiragana.ref;
                     buttons[1] = (direction == 1) ? incorrectHiragana[0].hiragana : incorrectHiragana[0].romaji;
+                        if (direction == 0 && incorrectHiragana[0].ref != '') subButtons[1] = incorrectHiragana[0].ref;
                     buttons[0] = (direction == 1) ? incorrectHiragana[1].hiragana : incorrectHiragana[1].romaji;
+                        if (direction == 0 && incorrectHiragana[1].ref != '') subButtons[0] = incorrectHiragana[1].ref;
                     buttons[3] = (direction == 1) ? incorrectHiragana[2].hiragana : incorrectHiragana[2].romaji;
+                        if (direction == 0 && incorrectHiragana[2].ref != '') subButtons[3] = incorrectHiragana[2].ref;
                     break;
                 case 3:
                     buttons[3] = (direction == 1) ? selectedHiragana.hiragana : selectedHiragana.romaji;
+                        if (direction == 0 && selectedHiragana.ref != '') subButtons[3] = selectedHiragana.ref;
                     buttons[1] = (direction == 1) ? incorrectHiragana[0].hiragana : incorrectHiragana[0].romaji;
+                        if (direction == 0 && incorrectHiragana[0].ref != '') subButtons[1] = incorrectHiragana[0].ref;
                     buttons[2] = (direction == 1) ? incorrectHiragana[1].hiragana : incorrectHiragana[1].romaji;
+                        if (direction == 0 && incorrectHiragana[1].ref != '') subButtons[2] = incorrectHiragana[1].ref;
                     buttons[0] = (direction == 1) ? incorrectHiragana[2].hiragana : incorrectHiragana[2].romaji;
+                        if (direction == 0 && incorrectHiragana[2].ref != '') subButtons[0] = incorrectHiragana[2].ref;
                     break;
             }
+            console.log(subButtons);
             for (let i = 0; i < 4; i++)
             {
                 HiraganaPortal[2].pages.default.optioncards[i].text = buttons[i];
+                HiraganaPortal[2].pages.default.subcards[i+1].text = (subButtons[i] != '') ? '(' + subButtons[i] + ')' : '';
             }
 
             destroyPortal();
