@@ -71,157 +71,245 @@ function ConstructPortal(height, width, portalObj)
 
     let activePage = portalObj.pages[portalObj.activePage];
 
-    activePage.headers.forEach(header => {
-        let newElem = document.createElement('label');
-        portalPanel.elem.appendChild(newElem);
-        newElem.innerText = header.text;
-        newElem.classList.add('header');
-        newElem.style.left = `${cellSize * header.left}px`;
-        newElem.style.top = `${cellSize * header.top}px`;
-        newElem.style.width = `${cellSize * header.width}px`;
-        newElem.style.height = `${cellSize * header.height}px`;
-    });
-
-    activePage.labels.forEach(label => {
-        let newElem = document.createElement('label');
-        portalPanel.elem.appendChild(newElem);
-        newElem.innerText = label.text;
-        newElem.classList.add('label');
-        newElem.style.left = `${cellSize * label.left}px`;
-        newElem.style.top = `${cellSize * label.top}px`;
-        newElem.style.width = `${cellSize * label.width}px`;
-        newElem.style.height = `${cellSize * label.height}px`;
-    });
-
-    activePage.inputs.forEach(input => {
-        let newElem = document.createElement('input');
-        portalPanel.elem.appendChild(newElem);
-        newElem.type = input.type;
-        newElem.id = input.id;
-        newElem.classList.add(`input${input.type}`);
-        newElem.style.left = `${cellSize * input.left}px`;
-        newElem.style.top = `${cellSize * input.top}px`;
-        newElem.style.width = `${cellSize * input.width}px`;
-        newElem.style.height = `${cellSize * input.height}px`;
-
-        if (input.type === 'text' && portalPanel.dataLinkage[input.id] >= 1000)
-        {
-            newElem.value = portalPanel.dataLinkage[input.id].toExponential();
-        }
-        else { newElem.value = portalPanel.dataLinkage[input.id]; }
-
-        if (onMobile)
-        {
-            newElem.addEventListener('focus', holdResize);
-            newElem.addEventListener('focusout', releaseResize);
-        }
-
-        newElem.addEventListener('change', portalPanel.updateFunction);
-
-        portalPanel[input.id] = newElem;
-    });
-
-    activePage.checkboxes.forEach(checkbox => {
-        let newContainer = document.createElement('label');
-        portalPanel.elem.appendChild(newContainer);
-        newContainer.classList.add(`checkcontainer`);
-        newContainer.style.left = `${cellSize * checkbox.left}px`;
-        newContainer.style.top = `${cellSize * checkbox.top}px`;
-        newContainer.style.width = `${cellSize * checkbox.width}px`;
-        newContainer.style.height = `${cellSize * checkbox.height}px`;
-
-        let newCheckbox = document.createElement('input');
-        newContainer.appendChild(newCheckbox);
-        newCheckbox.type = 'checkbox';
-        newCheckbox.id = checkbox.id;
-        newCheckbox.style.width = `0px`;
-        newCheckbox.style.height = `0px`;
-
-        newCheckbox.checked = portalPanel.dataLinkage[checkbox.id];
-
-        newCheckbox.addEventListener('change', portalPanel.updateFunction);
-
-        let newCheckmark = document.createElement('span');
-        newContainer.appendChild(newCheckmark);
-        newCheckmark.classList.add('checkmark');
-        newCheckmark.style.width = `${cellSize * checkbox.width}px`;
-        newCheckmark.style.height = `${cellSize * checkbox.height}px`;
-    });
-
-    activePage.displays.forEach(display => {
-        let newElem = document.createElement('label');
-        portalPanel.elem.appendChild(newElem);
-        newElem.id = display.id;
-        newElem.classList.add('display');
-        newElem.style.left = `${cellSize * display.left}px`;
-        newElem.style.top = `${cellSize * display.top}px`;
-        newElem.style.width = `${cellSize * display.width}px`;
-        newElem.style.height = `${cellSize * display.height}px`;
-        portalPanel[display.id] = newElem;
-    });
-
-    activePage.buttons.forEach(button => {
-        let newElem = document.createElement('label');
-        portalPanel.elem.appendChild(newElem);
-        newElem.innerText = button.text;
-        newElem.classList.add('button');
-        newElem.style.left = `${cellSize * button.left}px`;
-        newElem.style.top = `${cellSize * button.top}px`;
-        newElem.style.width = `${cellSize * button.width}px`;
-        newElem.style.height = `${cellSize * button.height}px`;
-        newElem.addEventListener('click', button.function);
-    });
-
-    activePage.toggles.forEach(toggle => {
-        let newElem = document.createElement('label');
-        portalPanel.elem.appendChild(newElem);
-        newElem.innerText = toggle.settings[0].text;
-        newElem.classList.add(`toggle`);
-        newElem.id = toggle.id;
-        newElem.dataset.setting = 0;
-        newElem.dataset.wrap = toggle.settings.length;
-        newElem.style.left = `${cellSize * toggle.left}px`;
-        newElem.style.top = `${cellSize * toggle.top}px`;
-        newElem.style.width = `${cellSize * toggle.width}px`;
-        newElem.style.height = `${cellSize * toggle.height}px`;
-        newElem.addEventListener('click', portalPanel.updateFunction);
-        portalPanel[toggle.id] = newElem;
-    });
-
-    if (activePage.lockboxes)
+    if (activePage.headers)
     {
-        activePage.lockboxes.forEach(lockbox => {
-            let newContainer = document.createElement('label');
-            portalPanel.elem.appendChild(newContainer);
-            newContainer.classList.add(`lockcontainer`);
-            newContainer.style.left = `${cellSize * lockbox.left}px`;
-            newContainer.style.top = `${cellSize * lockbox.top}px`;
-            newContainer.style.width = `${cellSize * lockbox.width}px`;
-            newContainer.style.height = `${cellSize * lockbox.height}px`;
-    
-            let newLockbox = document.createElement('input');
-            newContainer.appendChild(newLockbox);
-            newLockbox.type = 'checkbox';
-            newLockbox.id = lockbox.id;
-            newLockbox.style.width = `0px`;
-            newLockbox.style.height = `0px`;
-    
-            newLockbox.checked = portalPanel.dataLinkage[lockbox.id];
-    
-            newLockbox.addEventListener('change', portalPanel.updateFunction);
-    
-            let newLockmark = document.createElement('span');
-            newContainer.appendChild(newLockmark);
-            newLockmark.classList.add('lockmark');
-            newLockmark.style.width = `${cellSize * lockbox.width}px`;
-            newLockmark.style.height = `${cellSize * lockbox.height}px`;
-        })
+        activePage.headers.forEach(header => {
+            let newElem = document.createElement('label');
+            portalPanel.elem.appendChild(newElem);
+            newElem.innerText = header.text;
+            newElem.classList.add('header');
+            newElem.style.left = `${cellSize * header.left}px`;
+            newElem.style.top = `${cellSize * header.top}px`;
+            newElem.style.width = `${cellSize * header.width}px`;
+            newElem.style.height = `${cellSize * header.height}px`;
+        });
     }
 
-    if (portalPanel.initFunction) { portalPanel.initFunction(); }
+    if (activePage.labels)
+    {
+        activePage.labels.forEach(label => {
+            let newElem = document.createElement('label');
+            portalPanel.elem.appendChild(newElem);
+            newElem.innerText = label.text;
+            newElem.classList.add('label');
+            newElem.style.left = `${cellSize * label.left}px`;
+            newElem.style.top = `${cellSize * label.top}px`;
+            newElem.style.width = `${cellSize * label.width}px`;
+            newElem.style.height = `${cellSize * label.height}px`;
+        });
+    }
 
-    // portalPanel['rankrequirement'].innerText = GameDB.fleet.zeus.rankRequirements[academyDataLinkage.rankcurrent];
-    // PopulateTiming();
+    if (activePage.flashcards)
+    {
+        activePage.flashcards.forEach(flashcard => {
+            let newElem = document.createElement('label');
+            portalPanel.elem.appendChild(newElem);
+            newElem.innerText = flashcard.text;
+            newElem.classList.add('flashcard');
+            newElem.style.left = `${cellSize * flashcard.left}px`;
+            newElem.style.top = `${cellSize * flashcard.top}px`;
+            newElem.style.width = `${cellSize * flashcard.width}px`;
+            newElem.style.height = `${cellSize * flashcard.height}px`;
+        });
+    }
+
+    if (activePage.subcards)
+    {
+        activePage.subcards.forEach(subcard => {
+            let newElem = document.createElement('label');
+            portalPanel.elem.appendChild(newElem);
+            newElem.innerText = subcard.text;
+            newElem.classList.add('subcard');
+            newElem.style.left = `${cellSize * subcard.left}px`;
+            newElem.style.top = `${cellSize * subcard.top}px`;
+            newElem.style.width = `${cellSize * subcard.width}px`;
+            newElem.style.height = `${cellSize * subcard.height}px`;
+        });
+    }
+
+    if (activePage.optioncards)
+    {
+        activePage.optioncards.forEach(optioncard => {
+            let newElem = document.createElement('label');
+            portalPanel.elem.appendChild(newElem);
+            newElem.innerText = optioncard.text;
+            newElem.classList.add(`optioncard`);
+            newElem.id = optioncard.id;
+            newElem.dataset.setting = 0;
+            newElem.style.left = `${cellSize * optioncard.left}px`;
+            newElem.style.top = `${cellSize * optioncard.top}px`;
+            newElem.style.width = `${cellSize * optioncard.width}px`;
+            newElem.style.height = `${cellSize * optioncard.height}px`;
+            newElem.addEventListener('click', portalPanel.updateFunction);
+            portalPanel[optioncard.id] = newElem;
+        });
+    }
+
+    if (activePage.answerbox)
+    {
+        let newElem = document.createElement('label');
+        portalPanel.elem.appendChild(newElem);
+        newElem.id = 'answer';
+        newElem.classList.add('answerbox');
+        newElem.dataset.setting = 0;
+        newElem.style.left = `${cellSize * activePage.answerbox.left}px`;
+        newElem.style.top = `${cellSize * activePage.answerbox.top}px`;
+        newElem.style.width = `${cellSize * activePage.answerbox.width}px`;
+        newElem.style.height = `${cellSize * activePage.answerbox.height}px`;
+        portalPanel['answer'] = newElem;
+    }
+
+    // activePage.inputs.forEach(input => {
+    //     let newElem = document.createElement('input');
+    //     portalPanel.elem.appendChild(newElem);
+    //     newElem.type = input.type;
+    //     newElem.id = input.id;
+    //     newElem.classList.add(`input${input.type}`);
+    //     newElem.style.left = `${cellSize * input.left}px`;
+    //     newElem.style.top = `${cellSize * input.top}px`;
+    //     newElem.style.width = `${cellSize * input.width}px`;
+    //     newElem.style.height = `${cellSize * input.height}px`;
+
+    //     if (input.type === 'text' && portalPanel.dataLinkage[input.id] >= 1000)
+    //     {
+    //         newElem.value = portalPanel.dataLinkage[input.id].toExponential();
+    //     }
+    //     else { newElem.value = portalPanel.dataLinkage[input.id]; }
+
+    //     if (onMobile)
+    //     {
+    //         newElem.addEventListener('focus', holdResize);
+    //         newElem.addEventListener('focusout', releaseResize);
+    //     }
+
+    //     newElem.addEventListener('change', portalPanel.updateFunction);
+
+    //     portalPanel[input.id] = newElem;
+    // });
+
+    // activePage.checkboxes.forEach(checkbox => {
+    //     let newContainer = document.createElement('label');
+    //     portalPanel.elem.appendChild(newContainer);
+    //     newContainer.classList.add(`checkcontainer`);
+    //     newContainer.style.left = `${cellSize * checkbox.left}px`;
+    //     newContainer.style.top = `${cellSize * checkbox.top}px`;
+    //     newContainer.style.width = `${cellSize * checkbox.width}px`;
+    //     newContainer.style.height = `${cellSize * checkbox.height}px`;
+
+    //     let newCheckbox = document.createElement('input');
+    //     newContainer.appendChild(newCheckbox);
+    //     newCheckbox.type = 'checkbox';
+    //     newCheckbox.id = checkbox.id;
+    //     newCheckbox.style.width = `0px`;
+    //     newCheckbox.style.height = `0px`;
+
+    //     newCheckbox.checked = portalPanel.dataLinkage[checkbox.id];
+
+    //     newCheckbox.addEventListener('change', portalPanel.updateFunction);
+
+    //     let newCheckmark = document.createElement('span');
+    //     newContainer.appendChild(newCheckmark);
+    //     newCheckmark.classList.add('checkmark');
+    //     newCheckmark.style.width = `${cellSize * checkbox.width}px`;
+    //     newCheckmark.style.height = `${cellSize * checkbox.height}px`;
+    // });
+
+    if (activePage.displays)
+    {
+        activePage.displays.forEach(display => {
+            let newElem = document.createElement('label');
+            portalPanel.elem.appendChild(newElem);
+            newElem.id = display.id;
+            newElem.classList.add('display');
+            newElem.style.left = `${cellSize * display.left}px`;
+            newElem.style.top = `${cellSize * display.top}px`;
+            newElem.style.width = `${cellSize * display.width}px`;
+            newElem.style.height = `${cellSize * display.height}px`;
+            portalPanel[display.id] = newElem;
+        });
+    }
+
+    if (activePage.buttons)
+    {
+        activePage.buttons.forEach(button => {
+            let newElem = document.createElement('label');
+            portalPanel.elem.appendChild(newElem);
+            newElem.innerText = button.text;
+            newElem.classList.add('button');
+            newElem.style.left = `${cellSize * button.left}px`;
+            newElem.style.top = `${cellSize * button.top}px`;
+            newElem.style.width = `${cellSize * button.width}px`;
+            newElem.style.height = `${cellSize * button.height}px`;
+            newElem.addEventListener('click', button.function);
+        });
+    }
+
+    if (activePage.keyboard)
+    {
+        activePage.keyboard.forEach(answerKey => {
+            let newElem = document.createElement('label');
+            portalPanel.elem.appendChild(newElem);
+            newElem.innerText = answerKey.text;
+            newElem.classList.add('answerKey');
+            newElem.style.left = `${cellSize * answerKey.left}px`;
+            newElem.style.top = `${cellSize * answerKey.top}px`;
+            newElem.style.width = `${cellSize * answerKey.width}px`;
+            newElem.style.height = `${cellSize * answerKey.height}px`;
+            newElem.addEventListener('click', answerKey.function);
+            portalPanel[answerKey.text + 'key'] = newElem;
+        });
+    }
+
+    if (activePage.toggles)
+    {
+        activePage.toggles.forEach(toggle => {
+            let newElem = document.createElement('label');
+            portalPanel.elem.appendChild(newElem);
+            newElem.innerText = toggle.settings[0].text;
+            newElem.classList.add(`toggle`);
+            newElem.id = toggle.id;
+            newElem.dataset.setting = 0;
+            newElem.dataset.wrap = toggle.settings.length;
+            newElem.style.left = `${cellSize * toggle.left}px`;
+            newElem.style.top = `${cellSize * toggle.top}px`;
+            newElem.style.width = `${cellSize * toggle.width}px`;
+            newElem.style.height = `${cellSize * toggle.height}px`;
+            newElem.addEventListener('click', portalPanel.updateFunction);
+            portalPanel[toggle.id] = newElem;
+        });
+    }
+
+    // if (activePage.lockboxes)
+    // {
+    //     activePage.lockboxes.forEach(lockbox => {
+    //         let newContainer = document.createElement('label');
+    //         portalPanel.elem.appendChild(newContainer);
+    //         newContainer.classList.add(`lockcontainer`);
+    //         newContainer.style.left = `${cellSize * lockbox.left}px`;
+    //         newContainer.style.top = `${cellSize * lockbox.top}px`;
+    //         newContainer.style.width = `${cellSize * lockbox.width}px`;
+    //         newContainer.style.height = `${cellSize * lockbox.height}px`;
+    
+    //         let newLockbox = document.createElement('input');
+    //         newContainer.appendChild(newLockbox);
+    //         newLockbox.type = 'checkbox';
+    //         newLockbox.id = lockbox.id;
+    //         newLockbox.style.width = `0px`;
+    //         newLockbox.style.height = `0px`;
+    
+    //         newLockbox.checked = portalPanel.dataLinkage[lockbox.id];
+    
+    //         newLockbox.addEventListener('change', portalPanel.updateFunction);
+    
+    //         let newLockmark = document.createElement('span');
+    //         newContainer.appendChild(newLockmark);
+    //         newLockmark.classList.add('lockmark');
+    //         newLockmark.style.width = `${cellSize * lockbox.width}px`;
+    //         newLockmark.style.height = `${cellSize * lockbox.height}px`;
+    //     })
+    // }
+
+    if (portalPanel.initFunction) { portalPanel.initFunction(); }
 }
 
 function setPanelCSS(portalObj)
@@ -236,362 +324,549 @@ function setPanelCSS(portalObj)
 
     let [selector, properties] = ['', ''];
 
-    if (portalObj.pages.list.length > 1)
+    // if (portalObj.pages.list.length > 1)
+    // {
+    //     portalObj.pages.list.forEach(page => {
+    //         let thisPage = portalObj.pages[page];
+
+    //         selector = `.pager${thisPage.id}`;
+    //         properties =
+    //         [
+    //             'position: absolute;\n',
+    //             `font-size: ${Math.round(cellSize * portalObj.pageText)}px;\n`,
+    //             `line-height: ${Math.round(cellSize * portalObj.pageText * 1.2)}px;\n`,
+    //             `padding: ${cellSize}px 0;\n`,
+    //             'color: #CCCCCC;\n',
+    //             `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.pageText / 9)}px ${thisPage.color};\n`,
+    //             `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #CCCCCC, inset 0px 0px ${Math.round(cellSize / 10)}px #CCCCCC;\n`,
+    //             'margin: 0px;\n',
+    //             'text-align: center;\n'
+    //         ].join('');
+        
+    //         newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        
+    //         selector = `.pager${thisPage.id}:hover`;
+    //         properties =
+    //         [
+    //             `box-shadow: 0px 0px ${Math.round(cellSize)}px ${thisPage.color}, inset 0px 0px ${Math.round(cellSize / 2)}px ${thisPage.color};\n`
+    //         ].join('');
+        
+    //         newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        
+    //         selector = `.pager${thisPage.id}:active`;
+    //         properties =
+    //         [
+    //             `box-shadow: 0px 0px ${Math.round(cellSize)}px #FFFFFF, inset 0px 0px ${Math.round(cellSize / 2)}px #FFFFFF;\n`,
+    //             `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.pageText / 9)}px #000000;\n`,
+    //             `background-color: ${thisPage.color};\n`
+    //         ].join('');
+        
+    //         newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        
+    //         selector = `.pager${thisPage.id}.activepage`;
+    //         properties =
+    //         [
+    //             `box-shadow: 0px 0px ${Math.round(cellSize)}px ${thisPage.color}, inset 0px 0px ${Math.round(cellSize / 2)}px ${thisPage.color};\n`,
+    //             `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.pageText / 9)}px #000000;\n`,
+    //             `background-color: ${thisPage.color};\n`
+    //         ].join('');
+        
+    //         newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    //     });
+
+    // }
+
+    let activePage = portalObj.pages[portalObj.activePage];
+
+    if (activePage.headers)
     {
-        portalObj.pages.list.forEach(page => {
-            let thisPage = portalObj.pages[page];
+        selector = '.header';
+        properties =
+        [
+            'position: absolute;\n',
+            `font-size: ${Math.round(cellSize * portalObj.headerText)}px;\n`,
+            `line-height: ${Math.round(cellSize * portalObj.headerText)}px;\n`,
+            'color: #CCCCCC;\n',
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.headerText / 9)}px #FB7CC7;\n`,
+            'margin: auto;\n',
+            'text-align: center;\n'
+        ].join('');
 
-            selector = `.pager${thisPage.id}`;
-            properties =
-            [
-                'position: absolute;\n',
-                `font-size: ${Math.round(cellSize * portalObj.pageText)}px;\n`,
-                `line-height: ${Math.round(cellSize * portalObj.pageText * 1.2)}px;\n`,
-                `padding: ${cellSize}px 0;\n`,
-                'color: #CCCCCC;\n',
-                `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.pageText / 9)}px ${thisPage.color};\n`,
-                `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #CCCCCC, inset 0px 0px ${Math.round(cellSize / 10)}px #CCCCCC;\n`,
-                'margin: 0px;\n',
-                'text-align: center;\n'
-            ].join('');
-        
-            newStyleSheet.insertRule(`${selector} { ${properties} }`);
-        
-            selector = `.pager${thisPage.id}:hover`;
-            properties =
-            [
-                `box-shadow: 0px 0px ${Math.round(cellSize)}px ${thisPage.color}, inset 0px 0px ${Math.round(cellSize / 2)}px ${thisPage.color};\n`
-            ].join('');
-        
-            newStyleSheet.insertRule(`${selector} { ${properties} }`);
-        
-            selector = `.pager${thisPage.id}:active`;
-            properties =
-            [
-                `box-shadow: 0px 0px ${Math.round(cellSize)}px #FFFFFF, inset 0px 0px ${Math.round(cellSize / 2)}px #FFFFFF;\n`,
-                `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.pageText / 9)}px #000000;\n`,
-                `background-color: ${thisPage.color};\n`
-            ].join('');
-        
-            newStyleSheet.insertRule(`${selector} { ${properties} }`);
-        
-            selector = `.pager${thisPage.id}.activepage`;
-            properties =
-            [
-                `box-shadow: 0px 0px ${Math.round(cellSize)}px ${thisPage.color}, inset 0px 0px ${Math.round(cellSize / 2)}px ${thisPage.color};\n`,
-                `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.pageText / 9)}px #000000;\n`,
-                `background-color: ${thisPage.color};\n`
-            ].join('');
-        
-            newStyleSheet.insertRule(`${selector} { ${properties} }`);
-        });
-
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
     }
 
-    selector = '.header';
-    properties =
-    [
-        'position: absolute;\n',
-        `font-size: ${Math.round(cellSize * portalObj.headerText)}px;\n`,
-        `line-height: ${Math.round(cellSize * portalObj.headerText)}px;\n`,
-        'color: #CCCCCC;\n',
-        `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.headerText / 9)}px #FB7CC7;\n`,
-        'margin: auto;\n',
-        'text-align: center;\n'
-    ].join('');
+    if (activePage.labels)
+    {
+        selector = '.label';
+        properties =
+        [
+            'position: absolute;\n',
+            `font-size: ${Math.round(cellSize * portalObj.labelText)}px;\n`,
+            `line-height: ${Math.round(cellSize * portalObj.labelText * 2.0)}px;\n`,
+            'color: #CCCCCC;\n',
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.labelText / 9)}px #FB7CC7;\n`,
+            'margin: 0px;\n',
+            'text-align: center;\n'
+        ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    }
 
-    selector = '.label';
-    properties =
-    [
-        'position: absolute;\n',
-        `font-size: ${Math.round(cellSize * portalObj.labelText)}px;\n`,
-        `line-height: ${Math.round(cellSize * portalObj.labelText * 2.0)}px;\n`,
-        'color: #CCCCCC;\n',
-        `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.labelText / 9)}px #FB7CC7;\n`,
-        'margin: 0px;\n',
-        'text-align: center;\n'
-    ].join('');
+    if (activePage.flashcards)
+    {
+        selector = '.flashcard';
+        properties =
+        [
+            'position: absolute;\n',
+            `font-size: ${Math.round(cellSize * portalObj.flashcardText)}px;\n`,
+            `line-height: ${Math.round(cellSize * portalObj.flashcardText * 2.0)}px;\n`,
+            'color: #CCCCCC;\n',
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.flashcardText / 9)}px #FB7CC7;\n`,
+            'margin: 0px;\n',
+            'text-align: center;\n'
+        ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    }
 
-    selector = '.display';
-    properties =
-    [
-        'position: absolute;\n',
-        `font-size: ${Math.round(cellSize * portalObj.displayText)}px;\n`,
-        `line-height: ${Math.round(cellSize * portalObj.displayText)}px;\n`,
-        'color: #CCCCCC;\n',
-        `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.displayText / 9)}px #FB7CC7;\n`,
-        'margin: 0px;\n',
-        'text-align: start;\n'
-    ].join('');
+    if (activePage.subcards)
+    {
+        selector = '.subcard';
+        properties =
+        [
+            'position: absolute;\n',
+            `font-size: ${Math.round(cellSize * portalObj.subcardText)}px;\n`,
+            `line-height: ${Math.round(cellSize * portalObj.subcardText * 2.0)}px;\n`,
+            'color: #CCCCCC;\n',
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.subcardText / 9)}px #FB7CC7;\n`,
+            'margin: 0px;\n',
+            'text-align: center;\n'
+        ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    }
+    
+    if (activePage.displays)
+    {
+        selector = '.display';
+        properties =
+        [
+            'position: absolute;\n',
+            `font-size: ${Math.round(cellSize * portalObj.displayText)}px;\n`,
+            `line-height: ${Math.round(cellSize * portalObj.displayText)}px;\n`,
+            'color: #CCCCCC;\n',
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.displayText / 9)}px #FB7CC7;\n`,
+            'margin: 0px;\n',
+            'text-align: start;\n'
+        ].join('');
 
-    selector = '.button';
-    properties =
-    [
-        'position: absolute;\n',
-        `font-size: ${Math.round(cellSize * portalObj.buttonText)}px;\n`,
-        `line-height: ${Math.round(cellSize * portalObj.buttonText)}px;\n`,
-        `padding: ${cellSize}px 0;\n`,
-        'color: #CCCCCC;\n',
-        `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.buttonText / 9)}px #FB7CC7;\n`,
-        `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #CCCCCC, inset 0px 0px ${Math.round(cellSize / 10)}px #CCCCCC;\n`,
-        'margin: 0px;\n',
-        'text-align: center;\n'
-    ].join('');
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    }
+    
+    if (activePage.answerbox)
+    {
+        selector = '.answerbox';
+        properties =
+        [
+            'position: absolute;\n',
+            `font-size: ${Math.round(cellSize * portalObj.answerboxText)}px;\n`,
+            `line-height: ${Math.round(cellSize * portalObj.answerboxText * 1.5)}px;\n`,
+            'margin: 0px;\n',
+            'text-align: center;\n'
+        ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.button:hover';
-    properties =
-    [
-        `box-shadow: 0px 0px ${Math.round(cellSize)}px #FFFFFF, inset 0px 0px ${Math.round(cellSize / 2)}px #FFFFFF;\n`
-    ].join('');
+        selector = `.answerbox[data-setting="0"]`;
+        properties =
+        [
+            `color: #CCCCCC;\n`,
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.optioncardText / 9)}px #888888;\n`,
+            `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #888888, inset 0px 0px ${Math.round(cellSize / 5)}px #888888;\n`
+        ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.button:active';
-    properties =
-    [
-        `box-shadow: 0px 0px ${Math.round(cellSize)}px #FFFFFF, inset 0px 0px ${Math.round(cellSize / 2)}px #FFFFFF;\n`,
-        `background-color: #882288;\n`
-    ].join('');
+        selector = `.answerbox[data-setting="1"]`;
+        properties =
+        [
+            `color: #FF8888;\n`,
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.optioncardText / 9)}px #FF8888;\n`,
+            `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #FF8888, inset 0px 0px ${Math.round(cellSize)}px #FF8888;\n`
+        ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.inputnumber';
-    properties =
-    [
-        'position: absolute;\n',
-        `font-size: ${Math.round(cellSize * portalObj.inputText)}px;\n`,
-        'text-align: center;\n',
-        'font-family: "Syncopate";\n',
-        `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #CCCCCC, inset 0px 0px ${Math.round(cellSize / 10)}px #CCCCCC;\n`,
-        'background-color: black;\n',
-        `color: #CCCCCC;\n`,
-        'padding: 0px\n'
-    ].join('');
+        selector = `.answerbox[data-setting="2"]`;
+        properties =
+        [
+            `color: #88FF88;\n`,
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.optioncardText / 9)}px #88FF88;\n`,
+            `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #88FF88, inset 0px 0px ${Math.round(cellSize)}px #88FF88;\n`
+        ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    }
 
-    selector = '.inputtext';
-    properties =
-    [
-        'position: absolute;\n',
-        `font-size: ${Math.round(cellSize * portalObj.inputText)}px;\n`,
-        'text-align: center;\n',
-        'font-family: "Syncopate";\n',
-        `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #CCCCCC, inset 0px 0px ${Math.round(cellSize / 10)}px #CCCCCC;\n`,
-        'background-color: black;\n',
-        `color: #CCCCCC;\n`,
-        'padding: 0px\n'
-    ].join('');
+    if (activePage.buttons)
+    {
+        selector = '.button';
+        properties =
+        [
+            'position: absolute;\n',
+            `font-size: ${Math.round(cellSize * portalObj.buttonText)}px;\n`,
+            `line-height: ${Math.round(cellSize * portalObj.buttonText * 0.9)}px;\n`,
+            `padding: ${cellSize}px 0;\n`,
+            'color: #CCCCCC;\n',
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.buttonText / 9)}px #FB7CC7;\n`,
+            `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #CCCCCC, inset 0px 0px ${Math.round(cellSize / 10)}px #CCCCCC;\n`,
+            'margin: 0px;\n',
+            'text-align: center;\n'
+        ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+
+        selector = '.button:hover';
+        properties =
+        [
+            `box-shadow: 0px 0px ${Math.round(cellSize)}px #FFFFFF, inset 0px 0px ${Math.round(cellSize / 2)}px #FFFFFF;\n`
+        ].join('');
+
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+
+        selector = '.button:active';
+        properties =
+        [
+            `box-shadow: 0px 0px ${Math.round(cellSize)}px #FFFFFF, inset 0px 0px ${Math.round(cellSize / 2)}px #FFFFFF;\n`,
+            `background-color: #882288;\n`
+        ].join('');
+
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    }
+
+    if (activePage.keyboard)
+    {
+        selector = '.answerKey';
+        properties =
+        [
+            'position: absolute;\n',
+            `font-size: ${Math.round(cellSize * portalObj.keyboardText)}px;\n`,
+            `line-height: ${Math.round(cellSize * portalObj.keyboardText * 0.7)}px;\n`,
+            `padding: ${cellSize}px 0;\n`,
+            'color: #CCCCCC;\n',
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.keyboardText / 9)}px #FB7CC7;\n`,
+            `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #CCCCCC, inset 0px 0px ${Math.round(cellSize / 10)}px #CCCCCC;\n`,
+            'margin: 0px;\n',
+            'text-align: center;\n'
+        ].join('');
+
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+
+        selector = '.answerKey:hover';
+        properties =
+        [
+            `box-shadow: 0px 0px ${Math.round(cellSize)}px #FFFFFF, inset 0px 0px ${Math.round(cellSize / 2)}px #FFFFFF;\n`
+        ].join('');
+
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+
+        selector = '.answerKey:active';
+        properties =
+        [
+            `box-shadow: 0px 0px ${Math.round(cellSize)}px #FFFFFF, inset 0px 0px ${Math.round(cellSize / 2)}px #FFFFFF;\n`,
+            `background-color: #882288;\n`
+        ].join('');
+
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    }
+
+    // selector = '.inputnumber';
+    // properties =
+    // [
+    //     'position: absolute;\n',
+    //     `font-size: ${Math.round(cellSize * portalObj.inputText)}px;\n`,
+    //     'text-align: center;\n',
+    //     'font-family: "Syncopate";\n',
+    //     `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #CCCCCC, inset 0px 0px ${Math.round(cellSize / 10)}px #CCCCCC;\n`,
+    //     'background-color: black;\n',
+    //     `color: #CCCCCC;\n`,
+    //     'padding: 0px\n'
+    // ].join('');
+
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
+
+    // selector = '.inputtext';
+    // properties =
+    // [
+    //     'position: absolute;\n',
+    //     `font-size: ${Math.round(cellSize * portalObj.inputText)}px;\n`,
+    //     'text-align: center;\n',
+    //     'font-family: "Syncopate";\n',
+    //     `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #CCCCCC, inset 0px 0px ${Math.round(cellSize / 10)}px #CCCCCC;\n`,
+    //     'background-color: black;\n',
+    //     `color: #CCCCCC;\n`,
+    //     'padding: 0px\n'
+    // ].join('');
+
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
     // CHECKBOXES
 
-    selector = '.checkcontainer';
-    properties =
-    [
-        'position: absolute;\n',
-        'padding: 0px;\n'
-    ].join('');
+    // selector = '.checkcontainer';
+    // properties =
+    // [
+    //     'position: absolute;\n',
+    //     'padding: 0px;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.checkcontainer input';
-    properties =
-    [
-        'position: absolute;\n',
-        'padding: 0px;\n',
-        'opacity: 0;\n',
-        'height: 0px;\n',
-        'width: 0px;\n'
-    ].join('');
+    // selector = '.checkcontainer input';
+    // properties =
+    // [
+    //     'position: absolute;\n',
+    //     'padding: 0px;\n',
+    //     'opacity: 0;\n',
+    //     'height: 0px;\n',
+    //     'width: 0px;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.checkmark';
-    properties =
-    [
-        'position: absolute;\n',
-        'top: 0px;\n',
-        'left: 0px;\n',
-        'text-align: center;\n',
-        `line-height: ${Math.round(cellSize * 2)}px;\n`,
-        `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #444444, inset 0px 0px ${Math.round(cellSize / 10)}px #444444;\n`,
-        'background-color: #222222;\n'
-    ].join('');
+    // selector = '.checkmark';
+    // properties =
+    // [
+    //     'position: absolute;\n',
+    //     'top: 0px;\n',
+    //     'left: 0px;\n',
+    //     'text-align: center;\n',
+    //     `line-height: ${Math.round(cellSize * 2)}px;\n`,
+    //     `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #444444, inset 0px 0px ${Math.round(cellSize / 10)}px #444444;\n`,
+    //     'background-color: #222222;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.checkcontainer:hover input ~ .checkmark';
-    properties =
-    [
-        `box-shadow: 0px 0px ${Math.round(cellSize)}px #2222FF, inset 0px 0px ${Math.round(cellSize)}px #2222FF;\n`
-    ].join('');
+    // selector = '.checkcontainer:hover input ~ .checkmark';
+    // properties =
+    // [
+    //     `box-shadow: 0px 0px ${Math.round(cellSize)}px #2222FF, inset 0px 0px ${Math.round(cellSize)}px #2222FF;\n`
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.checkcontainer:hover input:checked ~ .checkmark';
-    properties =
-    [
-        `box-shadow: 0px 0px ${Math.round(cellSize)}px #FF2222, inset 0px 0px ${Math.round(cellSize)}px #FF2222;\n`
-    ].join('');
+    // selector = '.checkcontainer:hover input:checked ~ .checkmark';
+    // properties =
+    // [
+    //     `box-shadow: 0px 0px ${Math.round(cellSize)}px #FF2222, inset 0px 0px ${Math.round(cellSize)}px #FF2222;\n`
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.checkcontainer input:checked ~ .checkmark';
-    properties =
-    [
-        // 'background-color: #885588;\n',
-        'background-color: #000000;\n',
-        `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #AA22AA, inset 0px 0px ${Math.round(cellSize)}px #AA22AA;\n`
-    ].join('');
+    // selector = '.checkcontainer input:checked ~ .checkmark';
+    // properties =
+    // [
+    //     // 'background-color: #885588;\n',
+    //     'background-color: #000000;\n',
+    //     `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #AA22AA, inset 0px 0px ${Math.round(cellSize)}px #AA22AA;\n`
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.checkmark:after';
-    properties =
-    [
-        'content: "";\n',
-        'display: none;\n'
-    ].join('');
+    // selector = '.checkmark:after';
+    // properties =
+    // [
+    //     'content: "";\n',
+    //     'display: none;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.checkcontainer input:checked ~ .checkmark:after';
-    properties =
-    [
-        'content: "✔️";\n',
-        'display: block;\n'
-    ].join('');
+    // selector = '.checkcontainer input:checked ~ .checkmark:after';
+    // properties =
+    // [
+    //     'content: "✔️";\n',
+    //     'display: block;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
     // LOCKBOXES
 
-    selector = '.lockcontainer';
-    properties =
-    [
-        'position: absolute;\n',
-        'padding: 0px;\n'
-    ].join('');
+    // selector = '.lockcontainer';
+    // properties =
+    // [
+    //     'position: absolute;\n',
+    //     'padding: 0px;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.lockcontainer input';
-    properties =
-    [
-        'position: absolute;\n',
-        'padding: 0px;\n',
-        'opacity: 0;\n',
-        'height: 0px;\n',
-        'width: 0px;\n'
-    ].join('');
+    // selector = '.lockcontainer input';
+    // properties =
+    // [
+    //     'position: absolute;\n',
+    //     'padding: 0px;\n',
+    //     'opacity: 0;\n',
+    //     'height: 0px;\n',
+    //     'width: 0px;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.lockmark';
-    properties =
-    [
-        'position: absolute;\n',
-        'top: 0px;\n',
-        'left: 0px;\n',
-        'text-align: center;\n',
-        `line-height: ${Math.round(cellSize * 2)}px;\n`,
-        `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #444444, inset 0px 0px ${Math.round(cellSize / 10)}px #444444;\n`,
-        'background-color: #222222;\n'
-    ].join('');
+    // selector = '.lockmark';
+    // properties =
+    // [
+    //     'position: absolute;\n',
+    //     'top: 0px;\n',
+    //     'left: 0px;\n',
+    //     'text-align: center;\n',
+    //     `line-height: ${Math.round(cellSize * 2)}px;\n`,
+    //     `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #444444, inset 0px 0px ${Math.round(cellSize / 10)}px #444444;\n`,
+    //     'background-color: #222222;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.lockcontainer:hover input ~ .lockmark';
-    properties =
-    [
-        `box-shadow: 0px 0px ${Math.round(cellSize)}px #2222FF, inset 0px 0px ${Math.round(cellSize)}px #2222FF;\n`
-    ].join('');
+    // selector = '.lockcontainer:hover input ~ .lockmark';
+    // properties =
+    // [
+    //     `box-shadow: 0px 0px ${Math.round(cellSize)}px #2222FF, inset 0px 0px ${Math.round(cellSize)}px #2222FF;\n`
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.lockcontainer:hover input:checked ~ .lockmark';
-    properties =
-    [
-        `box-shadow: 0px 0px ${Math.round(cellSize)}px #FF2222, inset 0px 0px ${Math.round(cellSize)}px #FF2222;\n`
-    ].join('');
+    // selector = '.lockcontainer:hover input:checked ~ .lockmark';
+    // properties =
+    // [
+    //     `box-shadow: 0px 0px ${Math.round(cellSize)}px #FF2222, inset 0px 0px ${Math.round(cellSize)}px #FF2222;\n`
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.lockcontainer input:checked ~ .lockmark';
-    properties =
-    [
-        // 'background-color: #885588;\n',
-        'background-color: #000000;\n',
-        `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #AA22AA, inset 0px 0px ${Math.round(cellSize)}px #AA22AA;\n`
-    ].join('');
+    // selector = '.lockcontainer input:checked ~ .lockmark';
+    // properties =
+    // [
+    //     // 'background-color: #885588;\n',
+    //     'background-color: #000000;\n',
+    //     `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #AA22AA, inset 0px 0px ${Math.round(cellSize)}px #AA22AA;\n`
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.lockmark:after';
-    properties =
-    [
-        'content: "";\n',
-        'display: none;\n'
-    ].join('');
+    // selector = '.lockmark:after';
+    // properties =
+    // [
+    //     'content: "";\n',
+    //     'display: none;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.lockcontainer input:not(checked) ~ .lockmark:after';
-    properties =
-    [
-        'content: "🔓";\n',
-        'display: block;\n'
-    ].join('');
+    // selector = '.lockcontainer input:not(checked) ~ .lockmark:after';
+    // properties =
+    // [
+    //     'content: "🔓";\n',
+    //     'display: block;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = '.lockcontainer input:checked ~ .lockmark:after';
-    properties =
-    [
-        'content: "🔒";\n',
-        'display: block;\n'
-    ].join('');
+    // selector = '.lockcontainer input:checked ~ .lockmark:after';
+    // properties =
+    // [
+    //     'content: "🔒";\n',
+    //     'display: block;\n'
+    // ].join('');
 
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
+    // newStyleSheet.insertRule(`${selector} { ${properties} }`);
 
-    selector = `.toggle`;
-    properties =
-    [
-        'position: absolute;\n',
-        `font-size: ${Math.round(cellSize * portalObj.labelText)}px;\n`,
-        `line-height: ${Math.round(cellSize * portalObj.labelText * 2.0)}px;\n`,
-        'margin: 0px;\n',
-        'text-align: center;\n'
-    ].join('');
-
-    newStyleSheet.insertRule(`${selector} { ${properties} }`);
-
-    for (let i = 0; i < portalObj.pages[portalObj.activePage].toggles.length; i++)
+    if (activePage.toggles)
     {
-        let thisToggle = portalObj.pages[portalObj.activePage].toggles[i];
-        for (let j = 0; j < thisToggle.settings.length; j++)
-        {
-            selector = `#${thisToggle.id}[data-setting="${j}"]`;
-            properties =
-            [
-                `color: ${thisToggle.settings[j].color};\n`,
-                `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.labelText / 9)}px ${thisToggle.settings[j].color};\n`,
-                `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px ${thisToggle.settings[j].color}, inset 0px 0px ${Math.round(cellSize)}px ${thisToggle.settings[j].color};\n`
-            ].join('');
-    
-            newStyleSheet.insertRule(`${selector} { ${properties} }`);
-        }
+        selector = `.toggle`;
+        properties =
+        [
+            'position: absolute;\n',
+            `font-size: ${Math.round(cellSize * portalObj.toggleText)}px;\n`,
+            `line-height: ${Math.round(cellSize * portalObj.toggleText * 1.5)}px;\n`,
+            'margin: 0px;\n',
+            'text-align: center;\n'
+        ].join('');
 
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+
+        for (let i = 0; i < portalObj.pages[portalObj.activePage].toggles.length; i++)
+        {
+            let thisToggle = portalObj.pages[portalObj.activePage].toggles[i];
+            for (let j = 0; j < thisToggle.settings.length; j++)
+            {
+                selector = `#${thisToggle.id}[data-setting="${j}"]`;
+                properties =
+                [
+                    `color: ${thisToggle.settings[j].color};\n`,
+                    `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.labelText / 9)}px ${thisToggle.settings[j].color};\n`,
+                    `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px ${thisToggle.settings[j].color}, inset 0px 0px ${Math.round(cellSize)}px ${thisToggle.settings[j].color};\n`
+                ].join('');
+        
+                newStyleSheet.insertRule(`${selector} { ${properties} }`);
+            }
+
+        }
+    }
+
+    if (activePage.optioncards)
+    {
+        selector = `.optioncard`;
+        properties =
+        [
+            'position: absolute;\n',
+            `font-size: ${Math.round(cellSize * portalObj.optioncardText)}px;\n`,
+            `line-height: ${Math.round(cellSize * portalObj.optioncardText * 2)}px;\n`,
+            'margin: 0px;\n',
+            'text-align: center;\n'
+        ].join('');
+
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+
+        selector = `.optioncard[data-setting="0"]`;
+        properties =
+        [
+            `color: #888888;\n`,
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.optioncardText / 9)}px #888888;\n`,
+            `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #888888, inset 0px 0px ${Math.round(cellSize)}px #888888;\n`
+        ].join('');
+
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+
+        selector = `.optioncard[data-setting="1"]`;
+        properties =
+        [
+            `color: #FF8888;\n`,
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.optioncardText / 9)}px #FF8888;\n`,
+            `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #FF8888, inset 0px 0px ${Math.round(cellSize)}px #FF8888;\n`
+        ].join('');
+
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+
+        selector = `.optioncard[data-setting="2"]`;
+        properties =
+        [
+            `color: #88FF88;\n`,
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.optioncardText / 9)}px #88FF88;\n`,
+            `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #88FF88, inset 0px 0px ${Math.round(cellSize)}px #88FF88;\n`
+        ].join('');
+
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
+
+        selector = `.optioncard[data-setting="3"]`;
+        properties =
+        [
+            `color: #FFFFFF;\n`,
+            `text-shadow: 0px 0px ${Math.round(cellSize * portalObj.optioncardText / 9)}px #8888FF;\n`,
+            `box-shadow: 0px 0px ${Math.round(cellSize / 5)}px #FFFFFF, inset 0px 0px ${Math.round(cellSize)}px #8888FF;\n`
+        ].join('');
+
+        newStyleSheet.insertRule(`${selector} { ${properties} }`);
     }
 
     portalPanel.panelCSS = newCSS;

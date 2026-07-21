@@ -55,6 +55,79 @@ const hiraganaBatches = [
    ["や", "ゆ", "よ", "わ", "を"]
 ];
 
+const latinKeys = [
+    ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+    ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+    ["Z", "X", "C", "V", "B", "N", "M"]
+];
+
+const hiraganaKeys = [
+    [ 
+        { base: "あ", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "い", dakuten: "", handakuten: "", modifier: "" },
+        { base: "う", dakuten: "", handakuten: "", modifier: "" },
+        { base: "え", dakuten: "", handakuten: "", modifier: "" },
+        { base: "お", dakuten: "", handakuten: "", modifier: "" },
+        { base: "ん", dakuten: "", handakuten: "", modifier: "" }
+    ],
+    [ 
+        { base: "か", dakuten: "が", handakuten: "", modifier: "" },
+        { base: "き", dakuten: "ぎ", handakuten: "", modifier: "" },
+        { base: "く", dakuten: "ぐ", handakuten: "", modifier: "" },
+        { base: "け", dakuten: "げ", handakuten: "", modifier: "" },
+        { base: "こ", dakuten: "ご", handakuten: "", modifier: "" }
+    ],
+    [ 
+        { base: "さ", dakuten: "ざ", handakuten: "", modifier: "" },
+        { base: "し", dakuten: "じ", handakuten: "", modifier: "" },
+        { base: "す", dakuten: "ず", handakuten: "", modifier: "" },
+        { base: "せ", dakuten: "ぜ", handakuten: "", modifier: "" },
+        { base: "そ", dakuten: "ぞ", handakuten: "", modifier: "" }
+    ],
+    [ 
+        { base: "た", dakuten: "だ", handakuten: "", modifier: "" },
+        { base: "ち", dakuten: "ぢ", handakuten: "", modifier: "" },
+        { base: "つ", dakuten: "づ", handakuten: "", modifier: "っ" },
+        { base: "て", dakuten: "で", handakuten: "", modifier: "" }, 
+        { base: "と", dakuten: "ど", handakuten: "", modifier: "" } 
+    ],
+    [ 
+        { base: "な", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "に", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "ぬ", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "ね", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "の", dakuten: "", handakuten: "", modifier: "" } 
+    ],
+    [ 
+        { base: "は", dakuten: "ば", handakuten: "ぱ", modifier: "" }, 
+        { base: "ひ", dakuten: "び", handakuten: "ぴ", modifier: "" }, 
+        { base: "ふ", dakuten: "ぶ", handakuten: "ぷ", modifier: "" }, 
+        { base: "へ", dakuten: "べ", handakuten: "ぺ", modifier: "" }, 
+        { base: "ほ", dakuten: "ぼ", handakuten: "ぽ", modifier: "" } 
+    ],
+    [ 
+        { base: "ま", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "み", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "む", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "め", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "も", dakuten: "", handakuten: "", modifier: "" }
+    ],
+    [ 
+        { base: "ら", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "り", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "る", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "れ", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "ろ", dakuten: "", handakuten: "", modifier: "" } 
+    ],
+    [
+        { base: "や", dakuten: "", handakuten: "", modifier: "ゃ" }, 
+        { base: "ゆ", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "よ", dakuten: "", handakuten: "", modifier: "ゅ" }, 
+        { base: "わ", dakuten: "", handakuten: "", modifier: "" }, 
+        { base: "を", dakuten: "", handakuten: "", modifier: "ょ" } 
+    ]
+]
+
 const digraphs = [
     new Hiragana("kya", "きゃ", ""),
     new Hiragana("kyu", "きゅ", ""),
