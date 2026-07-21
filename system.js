@@ -96,6 +96,10 @@ function nextCard()
 
     correct = -1;
 
+    HiraganaPortal[1].pages.default.subcards[0].text = '';
+    HiraganaPortal[2].pages.default.subcards[0].text = '';
+    HiraganaPortal[4].pages.default.subcards[0].text = '';
+
     switch(selectedHiragana.stage)
     {
         case 0:
