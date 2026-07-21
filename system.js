@@ -11,6 +11,9 @@ let firstDraw = true;
 function SelectRandomHiragana()
 {
     let selector = Math.random();
+    console.log('selector: ' + selector);
+    let selection = false;
+
     for (let i = 0; i < activeHiragana.length; i++)
     {
         selector -= activeHiragana[i].weight;
@@ -23,6 +26,8 @@ function SelectRandomHiragana()
             return;
         }
     }
+
+    if (!selection) { console.log('selector subtraction error'); }
 }
 
 function RandomizeIncorrectHiragana(stage)
@@ -52,8 +57,6 @@ function RandomizeIncorrectHiragana(stage)
 
 function nextCard()
 {
-    console.log('drawing card');
-
     if (!firstDraw)
     {
         if (selectedHiragana.stage == 0)
@@ -78,6 +81,7 @@ function nextCard()
     {
         reselect = false;
         SelectRandomHiragana();
+        console.log('hiragana: ' + selectedHiragana.hiragana + ', weight: ' + (Math.round(selectedHiragana.weight * 1000) / 1000));
         // if (selectedHiragana.stage == 2)
         // {
         //     reselect = Math.random() > 0.08;
@@ -234,8 +238,6 @@ function validateCard(answerCard)
         }
     }
 
-    console.log('returning ' + (answer == correct ? 2 : 1));
-
     let response = { validation: (answer == correct ? 2 : 1), answer: 'option' + correct}
 
     return response;
@@ -266,29 +268,32 @@ function typeKey(e)
     answer += key;
     portalPanel.answer.innerText = answer;
 
-    if (answer.length == 1)
+    if (direction == 1)
     {
-        for (let i = 0; i < hiraganaKeys.length; i++)
+        if (answer.length == 1)
         {
-            for (let j = 0; j < hiraganaKeys[i].length; j++)
+            for (let i = 0; i < hiraganaKeys.length; i++)
             {
-                portalPanel[hiraganaKeys[i][j].base + 'key'].innerText = hiraganaKeys[i][j].modifier;
+                for (let j = 0; j < hiraganaKeys[i].length; j++)
+                {
+                    portalPanel[hiraganaKeys[i][j].base + 'key'].innerText = hiraganaKeys[i][j].modifier;
+                }
             }
+            portalPanel.handakuten.dataset.setting = 0;
+            portalPanel.dakuten.dataset.setting = 0;
         }
-        portalPanel.handakuten.dataset.setting = 0;
-        portalPanel.dakuten.dataset.setting = 0;
-    }
-    else
-    {
-        for (let i = 0; i < hiraganaKeys.length; i++)
+        else
         {
-            for (let j = 0; j < hiraganaKeys[i].length; j++)
+            for (let i = 0; i < hiraganaKeys.length; i++)
             {
-                portalPanel[hiraganaKeys[i][j].base + 'key'].innerText = "";
+                for (let j = 0; j < hiraganaKeys[i].length; j++)
+                {
+                    portalPanel[hiraganaKeys[i][j].base + 'key'].innerText = "";
+                }
             }
+            portalPanel.handakuten.dataset.setting = 0;
+            portalPanel.dakuten.dataset.setting = 0;
         }
-        portalPanel.handakuten.dataset.setting = 0;
-        portalPanel.dakuten.dataset.setting = 0;
     }
 }
 
@@ -378,7 +383,11 @@ function BiasWeights()
 
 function NormalizeWeights()
 {
-    let weightSum = 0;
-    for (let i = 0; i < activeHiragana[i].length; i++) { weightSum += activeHiragana[i].weight; }
-    for (let i = 0; i < activeHiragana[i].length; i++) { activeHiragana[i].weight /= weightSum; }
+    let weightSum = 0.0;
+    for (let i = 0; i < activeHiragana.length; i++) { weightSum += activeHiragana[i].weight; }
+    for (let i = 0; i < activeHiragana.length; i++) { activeHiragana[i].weight /= weightSum; }
+
+    // weightSum = 0.0;
+    // for (let i = 0; i < activeHiragana.length; i++) { weightSum += activeHiragana[i].weight; }
+    // console.log('post-normalization weight sum: ' + weightSum);
 }
