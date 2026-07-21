@@ -320,22 +320,6 @@ for (let i = 0; i < hiraganaKeys.length; i++)
     }
 }
 
-HiraganaPortal[1].pages.default.initFunction = function()
-{
-    if (direction == 1 && selectedHiragana.ref != "")
-    {
-        portalPanel.ref.innerText = '(' + selectedHiragana.ref + ')';
-    }
-}
-
-HiraganaPortal[2].pages.default.initFunction = function()
-{
-    if (direction == 1 && selectedHiragana.ref != "")
-    {
-        portalPanel.ref.innerText = '(' + selectedHiragana.ref + ')';
-    }
-}
-
 HiraganaPortal[1].pages.default.updateFunction = function(e)
 {
     let goNext = (e.target.dataset.setting == 3);
