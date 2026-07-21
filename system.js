@@ -123,7 +123,7 @@ function nextCard()
             direction = Math.round(Math.random());
 
             HiraganaPortal[1].pages.default.flashcards[0].text = (direction == 0) ? selectedHiragana.hiragana : selectedHiragana.romaji;
-            if (direction == 1) { HiraganaPortal[1].pages.subcards[0].text = `(${selectedHiragana.ref})`; }
+            if (direction == 1) { HiraganaPortal[1].pages.default.subcards[0].text = `(${selectedHiragana.ref})`; }
 
             RandomizeIncorrectHiragana();
             correct = Math.round(Math.random());
@@ -142,7 +142,7 @@ function nextCard()
             direction = Math.round(Math.random());
 
             HiraganaPortal[2].pages.default.flashcards[0].text = (direction == 0) ? selectedHiragana.hiragana : selectedHiragana.romaji;
-            if (direction == 1) { HiraganaPortal[2].pages.subcards[0].text = `(${selectedHiragana.ref})`; }
+            if (direction == 1) { HiraganaPortal[2].pages.default.subcards[0].text = `(${selectedHiragana.ref})`; }
 
             RandomizeIncorrectHiragana();
             correct = Math.floor(Math.random() * 4);
